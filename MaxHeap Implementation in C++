@@ -1,3 +1,6 @@
+//the Time complexity for Building a Binary Heap is 
+
+O(n)
 #include <bits/stdc++.h>
 using namespace std;
 
