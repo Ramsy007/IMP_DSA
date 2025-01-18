@@ -1,0 +1,103 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class MinHeap {
+private:
+    std::vector<int> heap;
+
+    // Helper functions for parent and children indices
+    int parent(int i) { return (i - 1) / 2; }
+    int leftChild(int i) { return 2 * i + 1; }
+    int rightChild(int i) { return 2 * i + 2; }
+
+    // Helper function to heapify down from a given index
+    void heapifyDown(int i) {
+        int smallest = i;
+        int left = leftChild(i);
+        int right = rightChild(i);
+
+        // Find the smallest value among the current node and its children
+        if (left < heap.size() && heap[left] < heap[smallest]) {
+            smallest = left;
+        }
+        if (right < heap.size() && heap[right] < heap[smallest]) {
+            smallest = right;
+        }
+
+        // If the smallest is not the current node, swap and recurse
+        if (smallest != i) {
+            std::swap(heap[i], heap[smallest]);
+            heapifyDown(smallest);
+        }
+    }
+
+    // Helper function to heapify up from a given index
+    void heapifyUp(int i) {
+        while (i > 0 && heap[parent(i)] > heap[i]) {
+            std::swap(heap[i], heap[parent(i)]);
+            i = parent(i);
+        }
+    }
+
+public:
+    // Insert a new element into the heap
+    void insert(int val) {
+        heap.push_back(val);  // Add the element to the end
+        heapifyUp(heap.size() - 1);  // Restore the heap property
+    }
+
+    // Get the minimum element from the heap
+    int getMin() {
+        if (heap.empty()) {
+            throw std::runtime_error("Heap is empty");
+        }
+        return heap[0];
+    }
+
+    // Remove and return the minimum element from the heap
+    int extractMin() {
+        if (heap.empty()) {
+            throw std::runtime_error("Heap is empty");
+        }
+        int minVal = heap[0];
+        heap[0] = heap.back();  // Move the last element to the root
+        heap.pop_back();  // Remove the last element
+        heapifyDown(0);  // Restore the heap property
+        return minVal;
+    }
+
+    // Check if the heap is empty
+    bool isEmpty() {
+        return heap.empty();
+    }
+
+    // Print the heap (for debugging)
+    void printHeap() {
+        for (int val : heap) {
+            std::cout << val << " ";
+        }
+        std::cout << std::endl;
+    }
+};
+
+int main() {
+    MinHeap minHeap;
+
+    // Insert elements
+    minHeap.insert(10);
+    minHeap.insert(5);
+    minHeap.insert(20);
+    minHeap.insert(2);
+
+    std::cout << "Heap elements: ";
+    minHeap.printHeap();
+
+    std::cout << "Minimum element: " << minHeap.getMin() << std::endl;
+
+    std::cout << "Extracting minimum: " << minHeap.extractMin() << std::endl;
+
+    std::cout << "Heap after extraction: ";
+    minHeap.printHeap();
+
+    return 0;
+}
