@@ -1,0 +1,107 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class MaxHeap {
+private:
+    std::vector<int> heap;
+
+    // Helper functions to get parent and child indices
+    int parent(int i) { return (i - 1) / 2; }
+    int leftChild(int i) { return 2 * i + 1; }
+    int rightChild(int i) { return 2 * i + 2; }
+
+    // Heapify down (used after extracting the maximum)
+    void heapifyDown(int i) {
+        int largest = i;
+        int left = leftChild(i);
+        int right = rightChild(i);
+
+        // Compare with left child
+        if (left < heap.size() && heap[left] > heap[largest]) {
+            largest = left;
+        }
+
+        // Compare with right child
+        if (right < heap.size() && heap[right] > heap[largest]) {
+            largest = right;
+        }
+
+        // If largest is not the current node, swap and recurse
+        if (largest != i) {
+            std::swap(heap[i], heap[largest]);
+            heapifyDown(largest);
+        }
+    }
+
+    // Heapify up (used after insertion)
+    void heapifyUp(int i) {
+        while (i > 0 && heap[parent(i)] < heap[i]) {
+            std::swap(heap[i], heap[parent(i)]);
+            i = parent(i);
+        }
+    }
+
+public:
+    // Insert a new element into the heap
+    void insert(int val) {
+        heap.push_back(val);  // Add the element at the end
+        heapifyUp(heap.size() - 1);  // Restore the heap property
+    }
+
+    // Get the maximum element
+    int getMax() {
+        if (heap.empty()) {
+            throw std::runtime_error("Heap is empty");
+        }
+        return heap[0];
+    }
+
+    // Remove and return the maximum element
+    int extractMax() {
+        if (heap.empty()) {
+            throw std::runtime_error("Heap is empty");
+        }
+        int maxVal = heap[0];
+        heap[0] = heap.back();  // Move the last element to the root
+        heap.pop_back();  // Remove the last element
+        heapifyDown(0);  // Restore the heap property
+        return maxVal;
+    }
+
+    // Check if the heap is empty
+    bool isEmpty() {
+        return heap.empty();
+    }
+
+    // Print the heap (for debugging)
+    void printHeap() {
+        for (int val : heap) {
+            std::cout << val << " ";
+        }
+        std::cout << std::endl;
+    }
+};
+
+int main() {
+    MaxHeap maxHeap;
+
+     int n;
+     cin>>n;
+     for(int i=0;i<n;i++){
+          int k;
+          cin>>k;
+          maxHeap.insert(k);
+     }
+
+    std::cout << "Heap elements: ";
+    maxHeap.printHeap();
+
+    std::cout << "Maximum element: " << maxHeap.getMax() << std::endl;
+
+    std::cout << "Extracting maximum: " << maxHeap.extractMax() << std::endl;
+
+    std::cout << "Heap after extraction: ";
+    maxHeap.printHeap();
+
+    return 0;
+}
